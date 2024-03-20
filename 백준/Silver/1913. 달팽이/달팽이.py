@@ -1,72 +1,48 @@
-from sys import stdin
-from collections import deque
-#k = stdin.readline().strip('\n')
-n = int(stdin.readline())
-target = int(stdin.readline())
-arr = [[0 for j in range(n)] for i in range(n)]
-num = 1
-x, y = int(n/2), int(n/2)
-arr[x][y] = num
-result = []
-if num == target:
-    result.append(x)
-    result.append(y)
-num += 1
+N = int(input())
+K = int(input())
 
-def fill(x, y, cnt, num, target, result):
-    dx = [0, 1, 0, -1]
+arr = [[0 for j in range(N)] for i in range(N)]
+num = 1
+arr[int(N/2)][int(N/2)] = num
+x, y = int(N/2), int(N/2)
+for cnt in range(1, int(N/2)+1):
+    dx = [0, 1, 0, -1] #우, 아래, 좌, 위
     dy = [1, 0, -1, 0]
-    arr[x-1][y] = num # 위로 한칸 이동
-    x -= 1
-    if num == target:
-        result.append(x)
-        result.append(y)
-    num += 1 
+    x += dx[3]
+    y += dy[3]
+    num += 1
+    arr[x][y] = num
     for i in range(4):
-        if i == 0: #우
-            for j in range(cnt*2-1):
+        if i == 0: #오른쪽
+            for j in range(2*cnt-1):
                 x += dx[i]
                 y += dy[i]
-                arr[x][y] = num
-                if num == target:
-                    result.append(x)
-                    result.append(y)
                 num += 1
-        elif i == 1: #하
-            for j in range(cnt*2):
+                arr[x][y] = num
+        elif i == 1: #아래 
+            for j in range(2*cnt):
                 x += dx[i]
                 y += dy[i]
-                arr[x][y] = num
-                if num == target:
-                    result.append(x)
-                    result.append(y)
                 num += 1
-        elif i == 2: #좌
-            for j in range(cnt*2):
+                arr[x][y] = num
+        elif i == 2: #왼쪽
+            for j in range(2*cnt):
                 x += dx[i]
                 y += dy[i]
-                arr[x][y] = num
-                if num == target:
-                    result.append(x)
-                    result.append(y)
                 num += 1
-        else: #상
-            for j in range(cnt*2):
+                arr[x][y] = num
+        elif i == 3: #위
+            for j in range(2*cnt):
                 x += dx[i]
                 y += dy[i]
-                arr[x][y] = num
-                if num == target:
-                    result.append(x)
-                    result.append(y)
                 num += 1
-    return num, result
-    
-for i in range(int(n/2)):
-    num, result = fill(x, y, i+1, num, target, result)
-    x -= 1
-    y -= 1
-for i in range(n):
-    for j in range(n):
+                arr[x][y] = num
+
+for i in range(N):
+    for j in range(N):
         print(arr[i][j], end=' ')
+        if arr[i][j] == K:
+            x = i
+            y = j
     print()
-print(result[0]+1, result[1]+1)
+print(x+1, y+1)
