@@ -1,31 +1,36 @@
-from sys import stdin
-from collections import deque
-#k = stdin.readline().strip('\n')
-L, R = map(str, stdin.readline().strip('\n').split())
-word = stdin.readline().strip('\n')
-arr = [[] for i in range(3)]
-arr[0] = list(map(str, 'qwertyuiop'))
-arr[1] = list(map(str, 'asdfghjkl'))
-arr[2] = list(map(str, 'zxcvbnm'))
-left = [0, 0]
-right = [0, 0]
-result = 0
-def find_xy(a):
-    for i in range(3): #L의 좌표 찾기
-        if str(arr[i]).find(a) == -1:
-            continue
-        x = i
-        y = arr[i].index(a)
-    return [x, y]
-left = find_xy(L)
-right = find_xy(R)
+arr = [['q', 'w', 'e','r', 't', 'y', 'u', 'i', 'o', 'p'],
+['a','s','d','f','g','h','j','k','l'],
+['z','x','c','v','b','n','m']]
 
+a, b = input().split()
+word = input()
+result = len(word)
+#입력받은 문자의 좌표 저장
+x = []
+y = []
+
+def find_index(a): #좌표 찾기 함수
+    k = 0
+    for j in range(3):
+        if a in arr[j]:
+            x = j
+            y = arr[j].index(a)
+    if (x == 0 and 0 <= y and y <= 4) or (x == 1 and 0 <= y and y <= 4) or (x == 2 and 0 <= y and y <= 3):
+        return x, y, 1 #왼손이면 1 반환
+    else:
+        return x, y, 0
+
+a_x, a_y, a_k = find_index(a)
+b_x, b_y, b_k = find_index(b)
 for i in range(len(word)):
-    position = find_xy(word[i])
-    if (position[0] < 2 and position[1] <= 4) or (position[0] == 2 and position[1] <= 3): #자음인 경우
-        result += 1 + abs(position[0] - left[0]) + abs(position[1] - left[1])
-        left = position
-    else: #모음인 경우
-        result += 1 + abs(position[0] - right[0]) + abs(position[1] - right[1])
-        right = position
+    x, y, k = find_index(word[i])
+    if k == 1: #왼손인 경우
+        result += abs(a_x - x) + abs(a_y - y)
+        a_x = x
+        a_y = y
+    else: #오른손인 경우
+        result += abs(b_x - x) + abs(b_y - y)
+        b_x = x
+        b_y = y
+
 print(result)
